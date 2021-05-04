@@ -52,42 +52,44 @@ def non_maximum_suppression(src):
     return maximized
 
 
-# Algorithm idea :
-# https://arxiv.org/ftp/arxiv/papers/1209/1209.1558.pdf
+if __name__ == "__main__":
+    # Algorithm idea :
+    # https://arxiv.org/ftp/arxiv/papers/1209/1209.1558.pdf
 
-filename = "resources/star.jpg"; threshold = 25_000
-# filename = "resources/lena.png"; threshold = 7_000
-# filename = "resources/chessboard.jpg"; threshold = 20_000
-# filename = "resources/inclined-chessboard.jpg"; threshold = 20_000
+    filename = "resources/star.jpg";
+    threshold = 25_000
+    # filename = "resources/lena.png"; threshold = 7_000
+    # filename = "resources/chessboard.jpg"; threshold = 20_000
+    # filename = "resources/inclined-chessboard.jpg"; threshold = 20_000
 
-img = cv2.imread(filename)
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype("int32")
+    img = cv2.imread(filename)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype("int32")
 
-print("Calculating intensity variation")
-start_time = time.time()
-variation = calculate_intensity_variation(gray)
-end_time = time.time()
-print("Elapsed time :", end_time-start_time, "s", end='\n')
+    print("Calculating intensity variation")
+    start_time = time.time()
+    variation = calculate_intensity_variation(gray)
+    end_time = time.time()
+    print("Elapsed time :", end_time - start_time, "s", end='\n')
 
-# Uncomment to help choose a threshold.
-# print("Variation max", variation.max())
+    # Uncomment to help choose a threshold.
+    # print("Variation max", variation.max())
 
-print("Calculating cornerness measure and thresholding")
-start_time = time.time()
-cornerness = calculate_cornerness_measure(variation, threshold)
-end_time = time.time()
-print("Elapsed time :", end_time-start_time, "s", end='\n')
+    print("Calculating cornerness measure and thresholding")
+    start_time = time.time()
+    cornerness = calculate_cornerness_measure(variation, threshold)
+    end_time = time.time()
+    print("Elapsed time :", end_time - start_time, "s", end='\n')
 
-print("Operating non maximum suppression")
-start_time = time.time()
-cornerness = non_maximum_suppression(cornerness)
-end_time = time.time()
-print("Elapsed time :", end_time-start_time, "s", end='\n')
+    print("Operating non maximum suppression")
+    start_time = time.time()
+    cornerness = non_maximum_suppression(cornerness)
+    end_time = time.time()
+    print("Elapsed time :", end_time - start_time, "s", end='\n')
 
-# Drawing a circle for each corner.
-rows, cols = np.where(cornerness != 0)
-for idx in range(len(rows)):
-    cv2.circle(img, (cols[idx], rows[idx]), 5, (0, 0, 255))
+    # Drawing a circle for each corner.
+    rows, cols = np.where(cornerness != 0)
+    for idx in range(len(rows)):
+        cv2.circle(img, (cols[idx], rows[idx]), 5, (0, 0, 255))
 
-cv2.imshow("Moravec", img)
-cv2.waitKey()
+    cv2.imshow("Moravec", img)
+    cv2.waitKey()
